@@ -1,0 +1,9 @@
+[project]
+name = "crewai-lab"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "crewai[litellm]>=1.15.30",
+]
