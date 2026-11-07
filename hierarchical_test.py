@@ -1,4 +1,4 @@
-from crewai import Agent, Task, Crew, Process, LLM
+from crewai import LLM, Agent, Crew, Process, Task
 
 # --- Менеджер: новая модель с tools (11.9B) ---
 manager_llm = LLM(
