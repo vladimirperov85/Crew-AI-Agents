@@ -17,8 +17,8 @@ class RouterFlow(Flow[TopicState]):
         self.state.topic = "локальные LLM vs облачные API"
         self.state.length = len(self.state.topic)  # считаем метрику сразу
         return "данные подготовлены"
-    
-        # --- Два независимых шага: оба после prepare ---
+
+    # --- Два независимых шага: оба после prepare ---
     @listen("prepare")
     def step_a(self, result):
         print("step_a выполнен")
@@ -40,9 +40,9 @@ class RouterFlow(Flow[TopicState]):
             return "long"
         return "short"
     
-    # --- Ветка А: слушатель подписан на МЕТКУ "long" ---
-    # обратите внимание: триггер — имя РОУТЕР-МЕТОДА ("classify"),
-    # а метка приходит одним аргументом
+    # --- Ветка А: слушатель подписан на МЕТКУ роутера "long" ---
+    # триггер = метка, которую вернул @router, НЕ имя роутер-метода
+    # метка приходит в метод одним аргументом
     @listen("long")
     def handle_long(self,label):  # label == "long"
         print("Ветка LONG: тема длинная, делаем развёрнутый разбор")
@@ -53,14 +53,14 @@ class RouterFlow(Flow[TopicState]):
     def handle_short(self,label):  # label == "short"
         print("Ветка SHORT: тема короткая, короткий конспект")
         return f"short-ветка для: {self.state.topic}"
-    
-        # --- or_: сработает, когда завершится ЛЮБОЙ из step_a/step_b ---
+
+    # --- or_: сработает, когда завершится ЛЮБОЙ из step_a/step_b ---
     @listen(or_("step_a", "step_b"))
     def on_any(self, result):
         print(f"or_ сработал, пришло: {result!r}")
         return "or-шаг завершён"
 
-        # --- and_: сработает, когда завершатся ОБА step_a и step_b ---
+    # --- and_: сработает, когда завершатся ОБА step_a и step_b ---
     @listen(and_("step_a", "step_b"))
     def on_all(self, result):
         print(f"and_ сработал, пришло: {result!r}")
